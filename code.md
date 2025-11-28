@@ -769,6 +769,225 @@ Hugo
 
 
 
+## 常用配置格式
+
+
+### 1. JSON 配置示例（应用配置）  
+适用于 Web 应用、API 服务的配置，结构清晰且易解析。  
+```json
+{
+  "server": {
+    "port": 8080,
+    "host": "0.0.0.0",
+    "timeout": 30000,
+    "enableCORS": true
+  },
+  "database": {
+    "type": "mysql",
+    "host": "localhost",
+    "port": 3306,
+    "username": "root",
+    "password": "123456",
+    "database": "myapp",
+    "pool": {
+      "maxSize": 20,
+      "minIdle": 5
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "/var/log/myapp/app.log",
+    "maxSize": "10MB",
+    "maxBackups": 5
+  },
+  "features": {
+    "enableAuth": true,
+    "enableCache": false,
+    "cacheTTL": 3600
+  }
+}
+```
+
+### 2. YAML 配置示例（K8s/应用配置）  
+简洁易读，常用于 Kubernetes、Ansible 或后端框架配置。  
+```yaml
+# 应用服务配置
+server:
+  port: 8080
+  host: 0.0.0.0
+  timeout: 30s
+  cors:
+    enabled: true
+    allowedOrigins: ["https://example.com", "http://localhost:3000"]
+
+database:
+  type: postgres
+  host: db.example.com
+  port: 5432
+  credentials:
+    username: app_user
+    password: ${DB_PASSWORD}  # 环境变量引用
+  database: app_db
+  ssl: true
+
+logging:
+  level: DEBUG
+  outputs:
+    - type: file
+      path: /var/log/app/app.log
+    - type: console
+      format: json
+
+features:
+  - name: "payment"
+    enabled: true
+    version: "v2"
+  - name: "notification"
+    enabled: false
+```
+
+### 3. TOML 配置示例（项目/工具配置）  
+GitHub、Cargo（Rust）等工具常用，结构直观且支持注释。  
+```toml
+# 项目元信息
+[package]
+name = "my_app"
+version = "1.0.0"
+authors = ["Your Name <you@example.com>"]
+edition = "2021"
+
+# 服务器配置
+[server]
+port = 8080
+host = "0.0.0.0"
+timeout = 30_000  # 数字支持下划线分隔
+enable_cors = true
+
+# 数据库配置
+[database]
+type = "mysql"
+host = "localhost"
+port = 3306
+username = "root"
+password = "123456"
+
+[database.pool]
+max_size = 20
+min_idle = 5
+
+# 多环境配置
+[env.production]
+log_level = "WARN"
+
+[env.development]
+log_level = "DEBUG"
+```
+
+### 4. INI 配置示例（传统应用/工具配置）  
+Windows 应用、Python 配置文件常用，分段式结构。  
+```ini
+[Server]
+Port=8080
+Host=0.0.0.0
+Timeout=30000
+EnableCORS=true
+
+[Database]
+Type=mysql
+Host=localhost
+Port=3306
+Username=root
+Password=123456
+Database=myapp
+
+[Database.Pool]
+MaxSize=20
+MinIdle=5
+
+[Logging]
+Level=INFO
+File=/var/log/myapp/app.log
+MaxSize=10MB
+MaxBackups=5
+
+; 注释示例
+; 功能开关
+[Features]
+EnableAuth=1
+EnableCache=0
+CacheTTL=3600
+```
+
+### 5. CONF 配置示例（Nginx/服务配置）  
+常用于 Nginx、Apache 等服务器配置，指令式结构。  
+```nginx
+# Nginx 服务器配置示例
+server {
+    listen 80;
+    server_name example.com www.example.com;
+
+    # 根目录与索引页
+    root /var/www/example.com;
+    index index.html index.htm;
+
+    # 日志配置
+    access_log /var/log/nginx/example.com.access.log;
+    error_log /var/log/nginx/example.com.error.log warn;
+
+    # 反向代理配置
+    location /api/ {
+        proxy_pass http://127.0.0.1:8080/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_connect_timeout 30s;
+    }
+
+    # 静态资源缓存
+    location ~* \.(jpg|jpeg|png|css|js)$ {
+        expires 7d;
+        add_header Cache-Control "public, max-age=604800";
+    }
+}
+```
+
+### 6. XML 配置示例（Spring/Java 应用配置）  
+常用于 Java 框架（如 Spring）、Web.xml 或数据交换。  
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring 数据源配置示例 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- 数据源配置 -->
+    <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/myapp"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+        <property name="maximumPoolSize" value="20"/>
+        <property name="minimumIdle" value="5"/>
+    </bean>
+
+    <!-- 服务器配置 -->
+    <bean id="serverConfig" class="com.example.ServerConfig">
+        <property name="port" value="8080"/>
+        <property name="host" value="0.0.0.0"/>
+        <property name="timeout" value="30000"/>
+        <property name="enableCORS" value="true"/>
+    </bean>
+
+    <!-- 日志配置 -->
+    <bean id="logConfig" class="com.example.LogConfig">
+        <property name="level" value="INFO"/>
+        <property name="filePath" value="/var/log/myapp/app.log"/>
+        <property name="maxSize" value="10MB"/>
+    </bean>
+</beans>
+```
+
+这些示例覆盖了主流配置格式的常见场景，可直接作为项目配置的模板参考，根据实际需求调整参数即可。
 
 
 

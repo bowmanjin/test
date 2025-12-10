@@ -373,6 +373,21 @@ console.log(formatUser(user1));
 
 ```
 
+```
+不指定编程语言类型
+# 功能：计算1-10的偶数平方和（体现列表推导、内置函数）
+def calculate_even_square_sum():
+    # 列表推导式筛选偶数并计算平方
+    even_squares = [x*x for x in range(1, 11) if x % 2 == 0]
+    return sum(even_squares)
+
+# 调用函数并打印结果
+result = calculate_even_square_sum()
+print(f"1-10偶数的平方和：{result}")  # 输出：220
+
+```
+
+
 
 
 以下是 **完整的标准 Markdown 语法示例**（含核心语法+常用扩展语法），所有示例均兼容 Hugo（及主流 Markdown 渲染器），可直接用于博客写作、文档编写，配合之前的代码高亮配置可完美渲染：

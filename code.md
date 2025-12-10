@@ -373,8 +373,8 @@ console.log(formatUser(user1));
 
 ```
 
+## 不指定编程语言类型
 ```
-不指定编程语言类型
 # 功能：计算1-10的偶数平方和（体现列表推导、内置函数）
 def calculate_even_square_sum():
     # 列表推导式筛选偶数并计算平方
